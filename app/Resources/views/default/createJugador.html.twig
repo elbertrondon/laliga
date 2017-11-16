@@ -1,0 +1,85 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+
+    <div class="ibox-title"> 
+            <h3> Crear Nuevo Jugador </h3>
+    </div>
+    <div class="ibox-content">
+        <div class="row">
+            <div class="col-lg-7">
+                <div class="ibox float-e-margins">
+                    {{ form_start(form, {'attr': {'class': 'form-horizontal'}}) }}
+                    
+
+                    <div class="form-group"><label class="col-lg-3 control-label">Nombre del Jugador</label>
+                        <div class="col-lg-9">
+                            {{ form_widget(form.nombre,{'attr':{'class':'form-control', 'required': 'required'}}) }}
+                            {{ form_errors(form.nombre) }}
+                        </div>
+                    </div>
+                    
+                    <div class="ibox-footer">
+                        <div class="row">
+                            <div class="col-lg-10">
+                            </div>
+                            <div class="col-lg-2">
+                                <button type="submit"  class="btn btn-primary m-b">Guardar</button>
+                            </div>
+                        </div>
+                    </div>
+                    {{ form_end(form) }}
+                </div>
+            </div>
+
+        </div>
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script src="{{ asset('assets/js/jquery-2.1.1.js') }}"></script>
+    <script src="{{ asset('assets/js/plugins/chosen/chosen.jquery.js') }}"></script>
+    <script src="{{ asset('assets/js/plugins/switchery/switchery.js') }}"></script>
+    <script src="{{ asset('assets/js/plugins/toastr/toastr.min.js') }}"></script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            
+        {% if app.session.flashbag.has('noticeError') %} 
+            toastr.error('', '{{ app.session.flashbag.get('noticeError').0 }}');
+        {% endif %}
+
+        {% if app.session.flashbag.has('notice') %} 
+                toastr.success('', '{{ app.session.flashbag.get('notice').0 }}');
+        {% endif %}
+
+                var config = {
+                    '.chosen-select': {},
+                    '.chosen-select-deselect': {allow_single_deselect: true},
+                    '.chosen-select-no-single': {disable_search_threshold: 10},
+                    '.chosen-select-no-results': {no_results_text: 'Oops, nothing found!'},
+                    '.chosen-select-width': {width: "95%"}
+                };
+                for (var selector in config) {
+                    $(selector).chosen(config[selector]);
+                }
+
+
+                var elem = document.querySelector('.js-switch');
+                var switchery = new Switchery(elem, {color: '#64bd63', secondaryColor: '#ed5565'});
+
+                $('#project_extension').focusout(function () {
+                    console.log("entro");
+                    var str = $('#project_extension').val().toString();
+                    console.log(str);
+                    var strClean = str.toLowerCase().replace(/[^a-z0-9\s]/gi, '').replace(/[_\s]/g, '');
+                    console.log(strClean);
+                    $('#project_extension').val(strClean);
+                });
+
+
+            });
+
+    </script>
+
+{% endblock %}
